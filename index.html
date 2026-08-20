@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>World Internet Speeds</title>
+    <meta
+      name="description"
+      content="Interactive world map of average fixed and mobile internet speeds, built from the Ookla Speedtest open dataset."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%233987e5'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="map" aria-hidden="true"></div>
+
+    <div id="loading" class="loading">
+      <div class="loading__spinner"></div>
+      <p>Loading Speedtest tiles…</p>
+    </div>
+
+    <main class="panel" id="panel">
+      <header class="panel__head">
+        <div>
+          <h1>World Internet Speeds</h1>
+          <p class="panel__sub">
+            Speedtest by Ookla · <span id="quarter-label">—</span>
+          </p>
+        </div>
+        <button
+          id="theme-toggle"
+          class="icon-btn"
+          type="button"
+          title="Switch between light and dark"
+          aria-label="Switch colour theme"
+        >
+          <span aria-hidden="true">◑</span>
+        </button>
+      </header>
+
+      <div class="controls">
+        <div class="control">
+          <span class="control__label" id="lbl-type">Connection</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="lbl-type" id="seg-type"></div>
+        </div>
+        <div class="control">
+          <span class="control__label" id="lbl-metric">Measure</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="lbl-metric" id="seg-metric"></div>
+        </div>
+        <div class="control">
+          <span class="control__label" id="lbl-view">View</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="lbl-view" id="seg-view"></div>
+          <p class="control__note" id="view-note" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <section class="summary" id="summary" aria-live="polite"></section>
+
+      <section class="ranking">
+        <div class="ranking__head">
+          <h2 id="ranking-title">Countries</h2>
+          <label class="search">
+            <span class="sr-only">Filter countries</span>
+            <input
+              id="search"
+              type="search"
+              placeholder="Filter countries…"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </label>
+        </div>
+        <ol class="ranking__list" id="ranking-list"></ol>
+        <p class="ranking__note" id="ranking-note"></p>
+      </section>
+
+      <footer class="panel__foot">
+        <button id="show-table" class="link-btn" type="button">View as table</button>
+        <p>
+          Speeds: <a href="https://registry.opendata.aws/speedtest-global-performance/" target="_blank" rel="noopener">Ookla Open Data</a>
+          (CC&nbsp;BY-NC-SA&nbsp;4.0). Boundaries: Natural&nbsp;Earth and
+          <a href="https://www.geoboundaries.org/" target="_blank" rel="noopener">geoBoundaries</a>
+          (CC&nbsp;BY&nbsp;4.0).
+        </p>
+      </footer>
+    </main>
+
+    <div class="legend" id="legend" aria-hidden="false"></div>
+
+    <section class="timeline" id="timeline" aria-label="Quarter timeline">
+      <button
+        id="play"
+        class="play-btn"
+        type="button"
+        aria-label="Play the timeline"
+        aria-pressed="false"
+      >
+        <span id="play-icon" aria-hidden="true">▶</span>
+      </button>
+
+      <div class="timeline__main">
+        <div class="timeline__head">
+          <output class="timeline__now" id="timeline-now" for="quarter-slider">—</output>
+          <span class="timeline__tests" id="timeline-tests"></span>
+        </div>
+        <div class="timeline__trend" id="timeline-trend"></div>
+        <input
+          id="quarter-slider"
+          class="timeline__range"
+          type="range"
+          min="0"
+          max="0"
+          step="1"
+          value="0"
+          aria-label="Quarter"
+        />
+        <div class="timeline__years" id="timeline-years" aria-hidden="true"></div>
+      </div>
+
+      <label class="timeline__speed">
+        <span class="sr-only">Playback speed</span>
+        <select id="speed">
+          <option value="1400">Slow</option>
+          <option value="800" selected>Normal</option>
+          <option value="380">Fast</option>
+        </select>
+      </label>
+    </section>
+
+    <div class="tooltip" id="tooltip" role="status" hidden></div>
+
+    <dialog class="table-dialog" id="table-dialog">
+      <div class="table-dialog__head">
+        <h2 id="table-title">Country table</h2>
+        <button id="table-close" class="icon-btn" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="table-dialog__body">
+        <table id="data-table"></table>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

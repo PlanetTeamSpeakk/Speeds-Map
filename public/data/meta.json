@@ -1,0 +1,429 @@
+{
+  "source": {
+    "name": "Speedtest by Ookla Global Fixed and Mobile Network Performance Maps",
+    "url": "https://registry.opendata.aws/speedtest-global-performance/",
+    "bucket": "s3://ookla-open-data/parquet/performance",
+    "license": "CC BY-NC-SA 4.0"
+  },
+  "boundaries": {
+    "name": "Natural Earth 1:50m Admin 0 Countries",
+    "url": "https://www.naturalearthdata.com/",
+    "license": "Public domain"
+  },
+  "subnational": {
+    "name": "geoBoundaries CGAZ (ADM1, ADM2)",
+    "url": "https://www.geoboundaries.org/",
+    "license": "CC BY 4.0"
+  },
+  "generated": "2026-08-20T19:47:04Z",
+  "joinZoom": 14,
+  "gridZooms": [
+    3,
+    5,
+    7,
+    9,
+    11
+  ],
+  "minTests": {
+    "tile": 2,
+    "cell": 15,
+    "country": 200
+  },
+  "quarters": [
+    {
+      "id": "2019Q1",
+      "label": "Q1 2019",
+      "year": 2019,
+      "quarter": 1,
+      "tests": {
+        "fixed": 68386048,
+        "mobile": 20261491
+      }
+    },
+    {
+      "id": "2019Q2",
+      "label": "Q2 2019",
+      "year": 2019,
+      "quarter": 2,
+      "tests": {
+        "fixed": 67165172,
+        "mobile": 19824809
+      }
+    },
+    {
+      "id": "2019Q3",
+      "label": "Q3 2019",
+      "year": 2019,
+      "quarter": 3,
+      "tests": {
+        "fixed": 90366297,
+        "mobile": 26628876
+      }
+    },
+    {
+      "id": "2019Q4",
+      "label": "Q4 2019",
+      "year": 2019,
+      "quarter": 4,
+      "tests": {
+        "fixed": 141303535,
+        "mobile": 26218253
+      }
+    },
+    {
+      "id": "2020Q1",
+      "label": "Q1 2020",
+      "year": 2020,
+      "quarter": 1,
+      "tests": {
+        "fixed": 70302515,
+        "mobile": 25555637
+      }
+    },
+    {
+      "id": "2020Q2",
+      "label": "Q2 2020",
+      "year": 2020,
+      "quarter": 2,
+      "tests": {
+        "fixed": 92686315,
+        "mobile": 28518630
+      }
+    },
+    {
+      "id": "2020Q3",
+      "label": "Q3 2020",
+      "year": 2020,
+      "quarter": 3,
+      "tests": {
+        "fixed": 71450234,
+        "mobile": 29555534
+      }
+    },
+    {
+      "id": "2020Q4",
+      "label": "Q4 2020",
+      "year": 2020,
+      "quarter": 4,
+      "tests": {
+        "fixed": 46896341,
+        "mobile": 29687094
+      }
+    },
+    {
+      "id": "2021Q1",
+      "label": "Q1 2021",
+      "year": 2021,
+      "quarter": 1,
+      "tests": {
+        "fixed": 65023196,
+        "mobile": 28328585
+      }
+    },
+    {
+      "id": "2021Q2",
+      "label": "Q2 2021",
+      "year": 2021,
+      "quarter": 2,
+      "tests": {
+        "fixed": 60581072,
+        "mobile": 27566738
+      }
+    },
+    {
+      "id": "2021Q3",
+      "label": "Q3 2021",
+      "year": 2021,
+      "quarter": 3,
+      "tests": {
+        "fixed": 147052513,
+        "mobile": 27927240
+      }
+    },
+    {
+      "id": "2021Q4",
+      "label": "Q4 2021",
+      "year": 2021,
+      "quarter": 4,
+      "tests": {
+        "fixed": 56819073,
+        "mobile": 26961670
+      }
+    },
+    {
+      "id": "2022Q1",
+      "label": "Q1 2022",
+      "year": 2022,
+      "quarter": 1,
+      "tests": {
+        "fixed": 141644413,
+        "mobile": 22518305
+      }
+    },
+    {
+      "id": "2022Q2",
+      "label": "Q2 2022",
+      "year": 2022,
+      "quarter": 2,
+      "tests": {
+        "fixed": 127849157,
+        "mobile": 23190048
+      }
+    },
+    {
+      "id": "2022Q3",
+      "label": "Q3 2022",
+      "year": 2022,
+      "quarter": 3,
+      "tests": {
+        "fixed": 127700681,
+        "mobile": 23500490
+      }
+    },
+    {
+      "id": "2022Q4",
+      "label": "Q4 2022",
+      "year": 2022,
+      "quarter": 4,
+      "tests": {
+        "fixed": 124782476,
+        "mobile": 25519294
+      }
+    },
+    {
+      "id": "2023Q1",
+      "label": "Q1 2023",
+      "year": 2023,
+      "quarter": 1,
+      "tests": {
+        "fixed": 109209048,
+        "mobile": 23935802
+      }
+    },
+    {
+      "id": "2023Q2",
+      "label": "Q2 2023",
+      "year": 2023,
+      "quarter": 2,
+      "tests": {
+        "fixed": 103619708,
+        "mobile": 22748911
+      }
+    },
+    {
+      "id": "2023Q3",
+      "label": "Q3 2023",
+      "year": 2023,
+      "quarter": 3,
+      "tests": {
+        "fixed": 108992350,
+        "mobile": 23261573
+      }
+    },
+    {
+      "id": "2023Q4",
+      "label": "Q4 2023",
+      "year": 2023,
+      "quarter": 4,
+      "tests": {
+        "fixed": 114088037,
+        "mobile": 22844599
+      }
+    },
+    {
+      "id": "2024Q1",
+      "label": "Q1 2024",
+      "year": 2024,
+      "quarter": 1,
+      "tests": {
+        "fixed": 116826105,
+        "mobile": 21537635
+      }
+    },
+    {
+      "id": "2024Q2",
+      "label": "Q2 2024",
+      "year": 2024,
+      "quarter": 2,
+      "tests": {
+        "fixed": 102651595,
+        "mobile": 20215799
+      }
+    },
+    {
+      "id": "2024Q3",
+      "label": "Q3 2024",
+      "year": 2024,
+      "quarter": 3,
+      "tests": {
+        "fixed": 105631005,
+        "mobile": 20454540
+      }
+    },
+    {
+      "id": "2024Q4",
+      "label": "Q4 2024",
+      "year": 2024,
+      "quarter": 4,
+      "tests": {
+        "fixed": 102571758,
+        "mobile": 19270543
+      }
+    },
+    {
+      "id": "2025Q1",
+      "label": "Q1 2025",
+      "year": 2025,
+      "quarter": 1,
+      "tests": {
+        "fixed": 95602481,
+        "mobile": 17672661
+      }
+    },
+    {
+      "id": "2025Q2",
+      "label": "Q2 2025",
+      "year": 2025,
+      "quarter": 2,
+      "tests": {
+        "fixed": 107067799,
+        "mobile": 17532828
+      }
+    },
+    {
+      "id": "2025Q3",
+      "label": "Q3 2025",
+      "year": 2025,
+      "quarter": 3,
+      "tests": {
+        "fixed": 109569034,
+        "mobile": 17296168
+      }
+    },
+    {
+      "id": "2025Q4",
+      "label": "Q4 2025",
+      "year": 2025,
+      "quarter": 4,
+      "tests": {
+        "fixed": 109666686,
+        "mobile": 18430541
+      }
+    },
+    {
+      "id": "2026Q1",
+      "label": "Q1 2026",
+      "year": 2026,
+      "quarter": 1,
+      "tests": {
+        "fixed": 99270567,
+        "mobile": 17887907
+      }
+    },
+    {
+      "id": "2026Q2",
+      "label": "Q2 2026",
+      "year": 2026,
+      "quarter": 2,
+      "tests": {
+        "fixed": 98036300,
+        "mobile": 19017278
+      }
+    }
+  ],
+  "levels": [
+    {
+      "level": 0,
+      "label": "Countries",
+      "units": 226,
+      "minZoom": 0,
+      "minTests": 200
+    },
+    {
+      "level": 1,
+      "label": "States & provinces",
+      "units": 2877,
+      "chunkZoom": 3,
+      "chunks": 40,
+      "bytes": 22740145,
+      "minTests": 100,
+      "minZoom": 4.5
+    },
+    {
+      "level": 2,
+      "label": "Districts",
+      "units": 43041,
+      "chunkZoom": 5,
+      "chunks": 739,
+      "bytes": 115998293,
+      "minTests": 30,
+      "minZoom": 6.5
+    }
+  ],
+  "types": {
+    "fixed": {
+      "tests": 2982811511,
+      "stops": {
+        "dl": [
+          16.14,
+          52.64,
+          87.9,
+          126.97,
+          175.77,
+          242.02,
+          415.54
+        ],
+        "ul": [
+          7.33,
+          23.94,
+          43.07,
+          64.15,
+          92.26,
+          132.85,
+          283.25
+        ],
+        "lat": [
+          5.61,
+          9.38,
+          12.63,
+          15.35,
+          18.64,
+          24.3,
+          65.42
+        ]
+      }
+    },
+    "mobile": {
+      "tests": 693869479,
+      "stops": {
+        "dl": [
+          10.47,
+          21.01,
+          33.47,
+          54.03,
+          97.83,
+          156.76,
+          344.83
+        ],
+        "ul": [
+          4.37,
+          10.27,
+          12.74,
+          15.31,
+          18.54,
+          23.31,
+          53.93
+        ],
+        "lat": [
+          20.79,
+          26.32,
+          30.77,
+          34.91,
+          40.03,
+          47.95,
+          100.13
+        ]
+      }
+    }
+  }
+}
