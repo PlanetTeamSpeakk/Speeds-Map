@@ -180,6 +180,13 @@ finest level.
 - The ramp anchors differently per theme, so "more" always means more contrast
   against the surface: the pale end recedes on the light basemap, the deep end
   recedes on the dark one.
+- **A selected country stays selected however far you zoom.** Flying to a small
+  country lands past the sub-national threshold, so the map switches to
+  districts — the country selection survives that, and keeps updating as you
+  scrub the timeline, which is the only way to follow one place through the
+  years. The summary marks the figure with the level it came from when that is
+  not the level on screen. A sub-national selection only lives while its own
+  level is drawn, since there is nothing to resolve it against otherwise.
 - **The map always shows the finest reading it has.** Zooming past the country
   level does not hide a place that has no sub-national data. A country with no
   published units keeps its own figure at full strength, and a unit that fell

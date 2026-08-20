@@ -183,12 +183,13 @@ function indexCountries() {
     plus any country in view that has no unit at this level. That mirrors what
     the map draws, so nothing can be visible on screen and missing from the
     ranking. */
-function activeRows() {
+function activeRows(level = state.level) {
   const p = pfx();
   const rows = [];
-  const push = (props, sub) =>
+  const push = (props, sub, rowLevel) =>
     rows.push({
       id: props.id,
+      level: rowLevel,
       name: props.name || '(unnamed)',
       sub,
       dl: props[`${p}_dl`],
@@ -197,9 +198,9 @@ function activeRows() {
       tests: props[`${p}_tests`],
     });
 
-  if (state.level === 0) {
+  if (level === 0) {
     for (const f of geo.features) {
-      if (f.properties[`${p}_tests`] != null) push(f.properties, f.properties.sub);
+      if (f.properties[`${p}_tests`] != null) push(f.properties, f.properties.sub, 0);
     }
   } else {
     for (const f of visibleFeatures) {
@@ -207,9 +208,9 @@ function activeRows() {
       // Inherited values are the country's figure wearing a district's shape;
       // ranking them would repeat one number across dozens of rows.
       if (props[`${p}_tests`] == null || props[`${p}_inh`]) continue;
-      push(props, countryNames.get(countryIdOf(props.sub)) ?? props.sub);
+      push(props, countryNames.get(countryIdOf(props.sub)) ?? props.sub, level);
     }
-    for (const f of fallbackCountries) push(f.properties, 'Country total');
+    for (const f of fallbackCountries) push(f.properties, 'Country total', 0);
   }
   const asc = METRICS[state.metric].better === 'lower';
   return rows.sort((a, b) =>
@@ -226,12 +227,44 @@ function worldAverage(metric) {
   return frames[0]?.worldMean(state.type)?.[metric] ?? null;
 }
 
+/**
+ * The selected unit, ranked within its own level rather than whatever level the
+ * map happens to be showing.
+ *
+ * A country stays resolvable at any zoom, because the country layer and its
+ * frame are always loaded -- which is what lets a country selection survive the
+ * fly-to that lands past the sub-national threshold.
+ */
+function resolveSelection() {
+  if (!state.selected) return null;
+  const { id, level } = state.selected;
+  const rows = activeRows(level);
+  const i = rows.findIndex((r) => r.id === id && r.level === level);
+  return i < 0 ? null : { row: rows[i], rank: i + 1, total: rows.length, level };
+}
+
+function isSelected(row) {
+  return (
+    state.selected != null &&
+    state.selected.id === row.id &&
+    state.selected.level === row.level
+  );
+}
+
 function stops() {
   return meta.types[state.type].stops[state.metric];
 }
 
 function levelLabel(level = state.level) {
   return regions.levelInfo(level)?.label ?? 'Countries';
+}
+
+/** Singular form, for talking about one unit. Chopping an "s" off the plural
+    labels gives "Countrie" and "States & province", so name them outright. */
+const LEVEL_NOUN = { 0: 'Country', 1: 'Province', 2: 'District' };
+
+function levelNoun(level) {
+  return LEVEL_NOUN[level] ?? levelLabel(level);
 }
 
 /* ------------------------------------------------------------------- map */
@@ -390,9 +423,17 @@ function refreshPaint() {
   show('countries-selected', regionView);
   show('regions-selected', sub);
 
-  const sel = state.selected ?? ' ';
-  map.setFilter('countries-selected', ['==', ['get', 'id'], sel]);
-  map.setFilter('regions-selected', ['==', ['get', 'id'], sub ? sel : ' ']);
+  const sel = state.selected;
+  map.setFilter('countries-selected', [
+    '==',
+    ['get', 'id'],
+    sel && sel.level === 0 ? sel.id : ' ',
+  ]);
+  map.setFilter('regions-selected', [
+    '==',
+    ['get', 'id'],
+    sub && sel && sel.level > 0 ? sel.id : ' ',
+  ]);
 }
 
 function viewBounds(pad = 0.15) {
@@ -463,10 +504,13 @@ async function syncData() {
   const level = regions.levelForZoom(map.getZoom()).level;
   const levelChanged = level !== state.level;
   state.level = level;
-  // A selection cannot survive a level change: a country and a district are
-  // different objects with different ids, so carrying one over would leave a
-  // highlight that matches nothing.
-  if (levelChanged) state.selected = null;
+  // A country selection survives any zoom -- selecting a small country flies
+  // past the sub-national threshold, and dropping it there would mean you could
+  // never track that country across the timeline. A sub-national selection only
+  // exists while its own level is drawn.
+  if (levelChanged && state.selected?.level > 0 && state.selected.level !== level) {
+    state.selected = null;
+  }
   setBusy(true);
 
   try {
@@ -677,17 +721,20 @@ function renderSummary() {
   const m = METRICS[state.metric];
   const rows = activeRows();
   const world = worldAverage(state.metric);
-  const idx = state.selected ? rows.findIndex((r) => r.id === state.selected) : -1;
+  const picked = resolveSelection();
   const q = quarter();
 
-  if (idx >= 0) {
-    const row = rows[idx];
+  if (picked) {
+    const { row, rank, total, level } = picked;
     const diff = world ? Math.round((row[state.metric] / world - 1) * 100) : null;
+    // Say which level the figure is from when it is not the level on screen,
+    // so a country total is never read as a district one.
+    const scope = level === state.level ? '' : `${levelNoun(level)} · `;
     el.innerHTML = `
       <div class="summary__label">${row.name}${row.sub ? ` · ${row.sub}` : ''}</div>
       <p class="summary__hero">${formatValue(row[state.metric], state.metric)}
-        <small>· #${idx + 1} of ${rows.length.toLocaleString('en-US')}</small></p>
-      <p class="summary__meta">${
+        <small>· #${rank} of ${total.toLocaleString('en-US')}</small></p>
+      <p class="summary__meta">${scope}${
         diff == null ? '' : `${diff > 0 ? '+' : ''}${diff}% vs. world · `
       }${formatCount(row.tests)} tests · ${q.label}</p>
       <dl class="summary__grid">
@@ -740,7 +787,7 @@ function renderRanking() {
       const li = document.createElement('li');
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = `row${row.id === state.selected ? ' is-selected' : ''}`;
+      btn.className = `row${isSelected(row) ? ' is-selected' : ''}`;
       btn.innerHTML = `
         <span class="row__rank">${rank.get(row.id)}</span>
         <span class="row__cell">
@@ -752,7 +799,7 @@ function renderRanking() {
           )}%;background:${colorAt(row[state.metric], sc, state.theme)}"></span></span>
         </span>
         <span class="row__value">${formatNumber(row[state.metric], state.metric)}</span>`;
-      btn.addEventListener('click', () => selectUnit(row.id, true));
+      btn.addEventListener('click', () => selectUnit(row.id, row.level, true));
       btn.addEventListener('mouseenter', () => setHover(row.id));
       btn.addEventListener('mouseleave', () => setHover(null));
       rowEls.set(row.id, btn);
@@ -886,22 +933,21 @@ function setHover(id, source = state.level > 0 ? 'regions' : 'countries') {
   }
 }
 
-function boundsForUnit(id) {
-  if (state.level > 0) {
+function boundsForUnit(id, level) {
+  if (level > 0) {
     const f = regionFeatures.find((x) => x.properties.id === id);
     if (f) return boundsOf(f.geometry);
   }
-  // Either the country level, or a country standing in for missing regions.
   return countryBounds.get(id) ?? null;
 }
 
-function selectUnit(id, fly) {
-  set({ selected: id });
-  const b = fly ? boundsForUnit(id) : null;
+function selectUnit(id, level, fly) {
+  set({ selected: { id, level } });
+  const b = fly ? boundsForUnit(id, level) : null;
   if (b) {
     map.fitBounds([[b[0], b[1]], [b[2], b[3]]], {
       padding: { top: 60, bottom: 90, left: 396, right: 260 },
-      maxZoom: state.level === 0 ? 7 : 9,
+      maxZoom: level === 0 ? 7 : 9,
       duration: 900,
     });
   }
@@ -1010,7 +1056,12 @@ function wireMapEvents() {
       return;
     }
     // An inherited unit is showing its country's number, so select the country.
-    set({ selected: p[`${k}_inh`] ? countryIdOf(p.sub) : p.id });
+    const country = pick.kind === 'country' || p[`${k}_inh`];
+    set({
+      selected: country
+        ? { id: pick.kind === 'country' ? p.id : countryIdOf(p.sub), level: 0 }
+        : { id: p.id, level: state.level },
+    });
   });
 
   let timer;
